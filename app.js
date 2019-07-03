@@ -8,10 +8,28 @@ GAME RULES:
 - The first player to reach 100 points on GLOBAL score wins the game
 
 */
-const scores = [0,0];
+
 let roundScore, activePlayer
-roundScore = 0;
-activePlayer = 0;
+
+
+const init = () =>{  
+  const scores = [0,0];
+  roundScore = 0;
+  activePlayer = 0;
+  hideDice();
+  resetCurrentScore();
+  resetPlayerScore();
+  document.getElementById('name-0').textContent = 'Player 1';
+  document.getElementById('name-1').textContent = 'Player 2';
+  document.querySelector('.player-0-panel').classList.remove('winner');
+  document.querySelector('.player-1-panel').classList.remove('winner');
+  document.querySelector('.player-0-panel').classList.remove('active');
+  document.querySelector('.player-1-panel').classList.remove('active');
+  document.querySelector('.player-0-panel').classList.add('active');
+  
+}
+
+
 
 const randomNumber = (range) =>{
   return Math.floor(Math.random() * range ) + 1;  
@@ -40,21 +58,14 @@ const resetCurrentScore = () => {
 }
 
 const resetPlayerScore = () => {
+  scores = [0,0];   
   document.getElementById('score-0').textContent = '0';
   document.getElementById('score-1').textContent = '0';
 }
 
-const resetGame = () => {
-  // Hide dice to begin game
-  hideDice();
-  // Reset current Score
-  resetCurrentScore();
-  // Reset Player's Scores
-  resetPlayerScore();
-}
 
 // Begin Game
-resetGame();
+  init();
 
 
 //Add event to button roll
@@ -80,10 +91,28 @@ document.querySelector('.btn-roll').addEventListener('click', function(){
 document.querySelector('.btn-hold').addEventListener('click', function () {
   // Add CURRENT score to Global score
   scores[activePlayer] += roundScore;
+
+  //Update UI
   document.getElementById('score-' + activePlayer).textContent = scores[activePlayer];
-  //Update the UI
-  nextPlayer();
+
+  //Check if player won game
+  if (scores[activePlayer]>= 20){
+    document.querySelector('#name-' + activePlayer).textContent = 'Winner!';
+    hideDice();
+    document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
+    document.querySelector('.player-' + activePlayer + '-panel').classList.remove('active');
+  } else {
+    //Next Player
+    nextPlayer();
+  } 
+  
 })
+
+// Add event for NEW GAME button
+
+document.querySelector('.btn-new').addEventListener('click', init);
+
+
 
 
 
